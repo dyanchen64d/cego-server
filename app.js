@@ -18,13 +18,10 @@ User.find({}).exec(function (err, docs) {
   console.log(docs);
 })
 
-
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-// 判断 token 是否过期
-app.use(checkExpired());
+app.use(checkExpired()); // 判断 token 是否过期
 
 // set 3rd_session in mongodb
 app.post('/code2session', function (req, res, next) {
@@ -82,6 +79,24 @@ app.post('/set-profile', function (req, res, next) {
     } else {
       console.log('/set-profile', err);
     }
+  })
+})
+
+// get Locatoins
+app.post('/get-locations', function (req, res, next) {
+  User.find({}).exec(function (err, docs) {
+    if (err) { res.send(err); }
+
+    let arr = docs.map((item, index) => {
+      return {
+        latitude: item.latitude,
+        longitude: item.longitude,
+        name: item.name,
+        address: item.address,
+        intro: item.intro
+      }
+    })
+    res.send(arr)
   })
 })
 
