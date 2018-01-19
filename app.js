@@ -102,7 +102,7 @@ app.post('/get-locations', function (req, res, next) {
 
 // nginx test
 app.get('/nginx-test', function (req, res, next) {
-  res.send('nginx-test');
+  res.send('Nginx test success!!');
 })
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
