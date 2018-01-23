@@ -7,6 +7,8 @@ const User = require('./libs/user.js')
 const uid = require('uid-safe')
 const cookieParser = require('cookie-parser')
 const checkExpired = require('./libs/expired.js')
+const craftEssence = require('./routers/craft-essence.js')
+const location = require('./routers/location.js')
 
 // remove all
 // User.remove({}, function (err) {
@@ -22,6 +24,12 @@ app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(checkExpired()); // 判断 token 是否过期
+
+// craft_essence router
+app.use('/craft-essence', craftEssence)
+
+// location router
+app.use('/location', location)
 
 // set 3rd_session in mongodb
 app.post('/code2session', function (req, res, next) {
@@ -59,44 +67,6 @@ app.post('/code2session', function (req, res, next) {
         });
       }
     })
-  })
-})
-
-// set user location intro
-app.post('/set-profile', function (req, res, next) {
-  let sessionid = req.userInfo.key3rd
-  let body = req.body
-
-  User.findOneAndUpdate({key3rd:sessionid}, {
-    latitude: body.location.latitude,
-    longitude: body.location.longitude,
-    name: body.location.name,
-    address: body.location.address,
-    intro: body.intro
-  }, (err, doc) => {
-    if (!err) {
-      res.send('success')
-    } else {
-      console.log('/set-profile', err);
-    }
-  })
-})
-
-// get Locatoins
-app.post('/get-locations', function (req, res, next) {
-  User.find({}).exec(function (err, docs) {
-    if (err) { res.send(err); }
-
-    let arr = docs.map((item, index) => {
-      return {
-        latitude: item.latitude,
-        longitude: item.longitude,
-        name: item.name,
-        address: item.address,
-        intro: item.intro
-      }
-    })
-    res.send(arr)
   })
 })
 
