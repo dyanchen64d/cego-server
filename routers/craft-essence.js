@@ -15,31 +15,77 @@ router.get('/', function (req, res) {
 
 // define the about route
 router.get('/craft-essences', function (req, res) {
-
   // console.log(req.query);
-
   let _data = data, count = 20;
 
-  if (req.query.atkhp === 'atk') {
-
-  } else if (req.query.atkhp === 'hp') {
-
-  } else if (req.query.atkhp === 'atkhp') {
-
+  // atkhp 筛选
+  switch (req.query.atkhp ) {
+    case 'atk':
+      _data = _data.filter((elem, idx) => {
+        return (Number(elem.atk) > 0) && (Number(elem.hp) <= 0)
+      })
+      break;
+    case 'hp':
+      _data = _data.filter((elem, idx) => {
+        return (Number(elem.hp) > 0) && (Number(elem.atk) <= 0)
+      })
+      break;
+    case 'atkhp':
+      _data = _data.filter((elem, idx) => {
+        return (Number(elem.atk) > 0) && (Number(elem.hp) > 0)
+      })
+      break;
+    default:
   }
 
-  if (req.query.cost) {
-
+  // rarity 筛选
+  switch (req.query.rarity) {
+    case 'yichi':
+      _data = _data.filter((elem, idx) => {
+        return elem.rarity.split(' ')[0].length === 1
+      })
+      break;
+    case 'ni':
+      _data = _data.filter((elem, idx) => {
+        return elem.rarity.split(' ')[0].length === 2
+      })
+      break;
+    case 'san':
+      _data = _data.filter((elem, idx) => {
+        return elem.rarity.split(' ')[0].length === 3
+      })
+      break;
+    case 'yon':
+      _data = _data.filter((elem, idx) => {
+        return elem.rarity.split(' ')[0].length === 4
+      })
+      break;
+    case 'go':
+      _data = _data.filter((elem, idx) => {
+        return elem.rarity.split(' ')[0].length === 5
+      })
+      break;
+    default:
   }
 
-  if (req.query.index) {
-    let idx = Number(req.query.index);
-    res.send({
-      index: idx,
-      count: count,
-      list: _data.slice(idx, count + idx)
-    })
+  // effect 筛选
+  if (req.query.effect) {
+    let effectArr = req.query.effect.split(',')
+
+    for (let i=0; i<effectArr.length; i++) {
+      if (effectArr[i] === 'all') continue;
+      _data = _data.filter((elem, idx) => {
+        return elem.effect.includes(effectArr[i])
+      })
+    }
   }
+
+  let idx = Number(req.query.index);
+  res.send({
+    index: idx,
+    count: count,
+    list: _data.slice(idx, count + idx)
+  })
 })
 
 module.exports = router
