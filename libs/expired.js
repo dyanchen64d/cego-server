@@ -14,9 +14,6 @@ module.exports = function () {
       }
 
       req.userInfo = query;
-    } else {
-      res.send('expired')
-      return;
     }
 
     await next();
