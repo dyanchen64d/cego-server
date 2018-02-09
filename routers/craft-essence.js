@@ -1,7 +1,6 @@
 var express = require('express')
 var router = express.Router()
 var fs = require('fs')
-var data = JSON.parse(fs.readFileSync('./libs/craft_essence.txt'))
 
 // middleware that is specific to this router
 // router.use(function (req, res, next) {
@@ -15,6 +14,10 @@ router.get('/', function (req, res) {
 
 // define the about route
 router.get('/craft-essences', function (req, res) {
+
+  // get data every time request
+  var data = JSON.parse(fs.readFileSync('./libs/craft_essence.txt'))
+
   // console.log(req.query);
   let _data = data, count = 20;
 
