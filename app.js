@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser')
 const checkExpired = require('./libs/expired.js')
 const craftEssence = require('./routers/craft-essence.js')
 const location = require('./routers/location.js')
+const taskWriteFile = require('./libs/task_write.js')
 
 // remove all
 // User.remove({}, function (err) {
